@@ -29,13 +29,16 @@
           <a class="btn btn-ghost" href="https://github.com/gofabrik/fabrik">View on GitHub →</a>
         </div>
         <button class="install-pill" id="copyInstall" type="button" aria-label="Copy install command">
-          <code>go install github.com/gofabrik/fabrik/fabrik@latest</code>
+          <code>curl -fsSL https://gofabrik.dev/install.sh | sh</code>
           <span class="copy-btn" aria-hidden="true">
             <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </span>
         </button>
         <span class="sr-only" role="status" aria-live="polite" id="copyStatus"></span>
+        <p class="hero-alt">
+          Prefer the Go toolchain? <a href="/install.html">Install from source with <code>go install</code> →</a>
+        </p>
       </div>
     </section>
 
@@ -108,7 +111,10 @@
         <ol class="steps">
           <li>
             <span class="step-label">Install the CLI</span>
-            <pre class="step-code"><code>go install github.com/gofabrik/fabrik/fabrik@latest</code></pre>
+            <pre class="step-code"><code>curl -fsSL https://gofabrik.dev/install.sh | sh</code></pre>
+            <p class="step-alt">
+              Prefer the Go toolchain? <a href="/install.html">Install from source with <code>go install</code> →</a>
+            </p>
           </li>
           <li>
             <span class="step-label">Scaffold and run</span>
