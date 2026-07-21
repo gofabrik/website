@@ -1,0 +1,40 @@
+{{define "title"}}Blog - Fabrik{{end}}
+{{define "description"}}News and notes from the Fabrik project.{{end}}
+
+{{define "body"}}
+  <header class="docs-top">
+    <div class="container">
+      <div class="hero-top">
+        <a class="hero-brand" href="/" aria-label="Fabrik home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          fabrik
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/docs/">Docs</a>
+          <a href="/blog/" aria-current="page">Blog</a>
+          <a href="{{.Site.Config.Repo}}">GitHub</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="docs-main">
+    <div class="container">
+      <div class="docs-content post-shell">
+        <p class="eyebrow">Blog</p>
+        <h1>News and notes</h1>
+        <ul class="post-list">
+          {{range .Site.Posts}}
+          <li>
+            <article>
+              <p class="post-date">{{.DisplayDate}}</p>
+              <h2><a href="{{.URL}}">{{.Title}}</a></h2>
+              {{if .Description}}<p class="post-desc">{{.Description}}</p>{{end}}
+            </article>
+          </li>
+          {{end}}
+        </ul>
+      </div>
+    </div>
+  </main>
+{{end}}

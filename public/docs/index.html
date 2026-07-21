@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Install - Fabrik</title>
+  <meta name="description" content="Install the Fabrik CLI with the one-line installer, or from source with go install.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%236459e6'/></svg>">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <header class="docs-top">
+    <div class="container">
+      <div class="hero-top">
+        <a class="hero-brand" href="/" aria-label="Fabrik home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          fabrik
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/docs/" aria-current="page">Docs</a>
+          <a href="https://github.com/gofabrik/fabrik">GitHub</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="docs-main">
+    <div class="container docs-shell">
+      <aside class="docs-sidebar" aria-label="Documentation navigation">
+        <details class="docs-menu" open>
+          <summary>On this page</summary>
+          <nav>
+            
+            
+            <p class="docs-nav-title">Start here</p>
+            
+            <a href="/docs/" aria-current="true">Install</a>
+            
+            
+          </nav>
+        </details>
+      </aside>
+
+      <article class="docs-content">
+        <p class="eyebrow">Documentation</p>
+        <h1 id="install">Install</h1>
+        <p class="docs-lede">The one-line installer is the quickest path: it downloads the latest prebuilt CLI for your platform, verifies its checksum, and puts it on your PATH.</p>
+        <div class="docs-body"><h2 id="prerequisites">Prerequisites</h2>
+<p>Fabrik builds and runs ordinary Go applications, so it needs the Go toolchain:
+<strong>Go 1.26 or newer</strong>. If you don't have it yet, install it from the
+<a href="https://go.dev/doc/install">Go install page</a>.</p>
+<h2 id="install-cli">Install the CLI</h2>
+<pre><code>curl -fsSL https://gofabrik.dev/install.sh | sh
+</code></pre>
+<h2 id="install-source">Install from source</h2>
+<p>If you'd rather build from source with the Go toolchain, use <code>go install</code>
+and make sure the Go bin directory is on your <code>PATH</code>.</p>
+<p>Install the CLI with Go:</p>
+<pre><code>go install github.com/gofabrik/fabrik/fabrik@latest
+</code></pre>
+<p><code>go install</code> places <code>fabrik</code> in Go's bin directory (<code>$(go env GOPATH)/bin</code>,
+e.g. <code>~/go/bin</code>). Add it for your shell:</p>
+<pre><code># zsh
+echo 'export PATH=&quot;$PATH:$(go env GOPATH)/bin&quot;' &gt;&gt; ~/.zshrc &amp;&amp; source ~/.zshrc
+
+# bash
+echo 'export PATH=&quot;$PATH:$(go env GOPATH)/bin&quot;' &gt;&gt; ~/.bashrc &amp;&amp; source ~/.bashrc
+
+# fish
+fish_add_path (go env GOPATH)/bin
+</code></pre>
+<p>Verify:</p>
+<pre><code>fabrik
+# fabrik new hello
+</code></pre>
+</div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 Fabrik. All rights reserved.</span>
+      <a href="https://github.com/gofabrik/fabrik">GitHub</a>
+    </div>
+  </footer>
+
+</body>
+</html>

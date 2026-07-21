@@ -1,0 +1,46 @@
+{{define "title"}}{{.Page.Title}} - Fabrik{{end}}
+{{define "description"}}{{.Page.Description}}{{end}}
+
+{{define "body"}}
+  <header class="docs-top">
+    <div class="container">
+      <div class="hero-top">
+        <a class="hero-brand" href="/" aria-label="Fabrik home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          fabrik
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/docs/" aria-current="page">Docs</a>
+          {{if .Site.Posts}}<a href="/blog/">Blog</a>
+          {{end}}<a href="{{.Site.Config.Repo}}">GitHub</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="docs-main">
+    <div class="container docs-shell">
+      <aside class="docs-sidebar" aria-label="Documentation navigation">
+        <details class="docs-menu" open>
+          <summary>On this page</summary>
+          <nav>
+            {{$current := .Page.URL}}
+            {{range .Site.DocGroups}}
+            <p class="docs-nav-title">{{.Name}}</p>
+            {{range .Pages}}
+            <a href="{{.URL}}"{{if eq .URL $current}} aria-current="true"{{end}}>{{.Title}}</a>
+            {{end}}
+            {{end}}
+          </nav>
+        </details>
+      </aside>
+
+      <article class="docs-content">
+        <p class="eyebrow">Documentation</p>
+        <h1 id="{{.Page.Slug}}">{{.Page.Title}}</h1>
+        {{if .Page.Lede}}<p class="docs-lede">{{.Page.Lede}}</p>{{end}}
+        <div class="docs-body">{{.Page.Body}}</div>
+      </article>
+    </div>
+  </main>
+{{end}}

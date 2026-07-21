@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fabrik - a full-stack Go framework</title>
+  <meta name="description" content="A full-stack, idiomatic Go framework. Add a few directives to your code and Fabrik generates the wiring your app needs - idiomatic Go, without the magic.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%236459e6'/></svg>">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-top">
+          <a class="hero-brand" href="/" aria-label="Fabrik home">
+            <span class="brand-mark" aria-hidden="true"></span>
+            fabrik
+          </a>
+          <nav class="site-nav" aria-label="Primary navigation">
+            <a href="/docs/">Docs</a>
+            <a href="https://github.com/gofabrik/fabrik">GitHub</a>
+          </nav>
+        </div>
+        <h1>Full-stack, <span class="accent">idiomatic</span> Go,<br>without the boilerplate.</h1>
+        <p class="lede">
+          Fabrik is a full-stack framework that generates the wiring you'd normally hand-write -
+          routing, dependency injection, a runnable server - as idiomatic Go.
+          Framework speed, without the magic.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/docs/">Get started</a>
+          <a class="btn btn-ghost" href="https://github.com/gofabrik/fabrik">View on GitHub →</a>
+        </div>
+        <button class="install-pill" id="copyInstall" type="button" aria-label="Copy install command">
+          <code>curl -fsSL https://gofabrik.dev/install.sh | sh</code>
+          <span class="copy-btn" aria-hidden="true">
+            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </span>
+        </button>
+        <span class="sr-only" role="status" aria-live="polite" id="copyStatus"></span>
+        <p class="hero-alt">
+          Prefer the Go toolchain? <a href="/docs/#install-source">Install from source with <code>go install</code> →</a>
+        </p>
+      </div>
+    </section>
+
+    <section id="how" class="section">
+      <div class="container">
+        <h2>How Fabrik works</h2>
+        <p class="section-sub">
+          Annotate your Go code with a few <code>//fabrik:*</code> directives. <code>fabrik wire</code>
+          scans them and generates <code>main.gen.go</code>: all the wiring your app needs, <br>
+          as idiomatic Go code, reviewable, without the implicit magic.
+        </p>
+
+        <div class="tab-bar">
+          <ul class="tab-list" role="tablist" aria-label="Examples">
+            <li role="presentation"><button type="button" role="tab" id="tab-routes" aria-controls="panel-routes" aria-selected="true" data-tab="routes">Routes</button></li>
+            <li role="presentation"><button type="button" role="tab" id="tab-commands" aria-controls="panel-commands" aria-selected="false" tabindex="-1" data-tab="commands">Commands</button></li>
+            <li role="presentation"><button type="button" role="tab" id="tab-jobs" aria-controls="panel-jobs" aria-selected="false" tabindex="-1" data-tab="jobs">Jobs</button></li>
+            <li role="presentation"><button type="button" role="tab" id="tab-config" aria-controls="panel-config" aria-selected="false" tabindex="-1" data-tab="config">Config</button></li>
+            <li role="presentation"><button type="button" role="tab" id="tab-providers" aria-controls="panel-providers" aria-selected="false" tabindex="-1" data-tab="providers">Providers</button></li>
+          </ul>
+        </div>
+
+        <div class="split tab-panel" id="panel-routes" role="tabpanel" aria-labelledby="tab-routes" tabindex="0">
+          <figure class="code-card">
+            <figcaption>web.go - you write this</figcaption>
+<pre><code><span class="kw">package</span> web
+
+<span class="dir">//fabrik:http GET /hello/{name}</span>
+<span class="kw">func</span> <span class="fn">Hello</span>(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, <span class="str">"Hello, %s!"</span>, r.PathValue(<span class="str">"name"</span>))
+}</code></pre>
+          </figure>
+
+          <figure class="code-card">
+            <figcaption>main.gen.go - Fabrik generates the route (abbreviated)</figcaption>
+<pre><code><span class="cm">// Code generated by fabrik. DO NOT EDIT.</span>
+r := router.New()
+r.Method(<span class="str">"GET"</span>, <span class="str">"/hello/{name}"</span>, web.Hello)
+
+server := httpserver.New(r, nil)</code></pre>
+          </figure>
+        </div>
+
+
+        <div class="split tab-panel" id="panel-commands" role="tabpanel" aria-labelledby="tab-commands" tabindex="0" hidden>
+          <figure class="code-card">
+            <figcaption>cli.go - you write this</figcaption>
+<pre><code><span class="kw">package</span> shared
+
+<span class="dir">//fabrik:cli:command</span>
+<span class="kw">func</span> <span class="fn">Serve</span>(ctx cli.Context, server *httpserver.Server) <span class="kw">error</span> {
+    <span class="kw">return</span> server.Run(ctx)
+}
+
+<span class="dir">//fabrik:cli:command</span>
+<span class="kw">func</span> <span class="fn">Migrate</span>(ctx cli.Context, db *sql.DB, src migrations.Sources) <span class="kw">error</span> {
+    <span class="kw">return</span> src.Migrate(ctx, db, migrations.DialectSQLite)
+}</code></pre>
+          </figure>
+
+          <figure class="code-card">
+            <figcaption>main.gen.go - Fabrik generates the CLI (abbreviated)</figcaption>
+<pre><code><span class="cm">// Code generated by fabrik. DO NOT EDIT.</span>
+{
+    Name: <span class="str">"serve"</span>,
+    Run: <span class="kw">func</span>(ctx cli.Context) <span class="kw">error</span> {
+        server, cleanup, err := buildServe(ctx)
+        <span class="kw">if</span> err != nil {
+            <span class="kw">return</span> err
+        }
+        <span class="kw">defer</span> cleanup()
+        <span class="kw">return</span> shared.Serve(ctx, server)
+    },
+},
+{
+    Name: <span class="str">"migrate"</span>,
+    Run: <span class="kw">func</span>(ctx cli.Context) <span class="kw">error</span> {
+        db, sources, cleanup, err := buildMigrate(ctx)
+        <span class="kw">if</span> err != nil {
+            <span class="kw">return</span> err
+        }
+        <span class="kw">defer</span> cleanup()
+        <span class="kw">return</span> shared.Migrate(ctx, db, sources)
+    },
+},</code></pre>
+          </figure>
+        </div>
+
+        <div class="split tab-panel" id="panel-jobs" role="tabpanel" aria-labelledby="tab-jobs" tabindex="0" hidden>
+          <figure class="code-card">
+            <figcaption>jobs.go - you write this</figcaption>
+<pre><code><span class="kw">package</span> web
+
+<span class="kw">type</span> Visit <span class="kw">struct</span> {
+    Path <span class="kw">string</span> `json:<span class="str">"path"</span>`
+}
+
+<span class="dir">//fabrik:job</span>
+<span class="kw">func</span> <span class="fn">RecordVisit</span>(ctx context.Context, q *query.DB, v Visit) <span class="kw">error</span> {
+    _, err := q.ExecContext(ctx,
+        <span class="str">`insert into visits (path)
+         values (?)`</span>, v.Path)
+    <span class="kw">return</span> err
+}
+
+<span class="dir">//fabrik:cron name=purge-sessions schedule="0 * * * *"</span>
+<span class="kw">func</span> <span class="fn">PurgeSessions</span>(ctx context.Context, q *query.DB) <span class="kw">error</span> {
+    _, err := q.ExecContext(ctx,
+        <span class="str">`delete from sessions
+         where expires_at &lt; ?`</span>, time.Now())
+    <span class="kw">return</span> err
+}</code></pre>
+          </figure>
+
+          <figure class="code-card">
+            <figcaption>main.gen.go - Fabrik generates the worker (abbreviated)</figcaption>
+<pre><code><span class="cm">// Code generated by fabrik. DO NOT EDIT.</span>
+jobsManager, err := jobs.New(jobsStore, jobsConfig)
+<span class="kw">if</span> err != nil {
+    <span class="kw">return</span> err
+}
+
+jobs.Register[web.Visit](jobsManager, <span class="str">"web.Visit"</span>)
+jobs.On[web.Visit](jobsManager, <span class="str">"RecordVisit"</span>,
+    <span class="kw">func</span>(c jobs.Context, m web.Visit) <span class="kw">error</span> {
+        <span class="kw">return</span> web.RecordVisit(c, queriesDB, m)
+    })
+
+jobs.RegisterCron(jobsManager, <span class="str">"purge-sessions"</span>, <span class="str">"0 * * * *"</span>,
+    <span class="kw">func</span>(c jobs.Context) <span class="kw">error</span> {
+        <span class="kw">return</span> web.PurgeSessions(c, queriesDB)
+    })
+
+worker := jobs.NewRunner(jobsManager, runtimeConfig)</code></pre>
+          </figure>
+        </div>
+
+        <div class="split tab-panel" id="panel-config" role="tabpanel" aria-labelledby="tab-config" tabindex="0" hidden>
+          <figure class="code-card">
+            <figcaption>config.go - you write this</figcaption>
+<pre><code><span class="kw">package</span> shared
+
+<span class="dir">//fabrik:config http</span>
+<span class="kw">type</span> HTTPConfig <span class="kw">struct</span> {
+    Addr <span class="kw">string</span> `yaml:<span class="str">"addr"</span> env:<span class="str">"DEMO_HTTP_ADDR"</span> default:<span class="str">":8080"</span>`
+}
+
+<span class="dir">//fabrik:config database</span>
+<span class="kw">type</span> DatabaseConfig <span class="kw">struct</span> {
+    Path <span class="kw">string</span> `yaml:<span class="str">"path"</span> env:<span class="str">"DEMO_DATABASE_PATH"</span> default:<span class="str">"demo.db"</span>`
+}</code></pre>
+          </figure>
+
+          <figure class="code-card">
+            <figcaption>main.gen.go - Fabrik generates the loading (abbreviated)</figcaption>
+<pre><code><span class="cm">// Code generated by fabrik. DO NOT EDIT.</span>
+httpConfig, err := config.Load[shared.HTTPConfig](
+    config.FileOptional(<span class="str">"config.yaml"</span>),
+    config.FileOptional(<span class="str">"config.local.yaml"</span>),
+    config.Section(<span class="str">"http"</span>),
+)
+<span class="kw">if</span> err != nil {
+    <span class="kw">return</span> err
+}
+
+databaseConfig, err := config.Load[shared.DatabaseConfig](
+    config.FileOptional(<span class="str">"config.yaml"</span>),
+    config.FileOptional(<span class="str">"config.local.yaml"</span>),
+    config.Section(<span class="str">"database"</span>),
+)
+<span class="kw">if</span> err != nil {
+    <span class="kw">return</span> err
+}</code></pre>
+          </figure>
+        </div>
+
+        <div class="split tab-panel" id="panel-providers" role="tabpanel" aria-labelledby="tab-providers" tabindex="0" hidden>
+          <figure class="code-card">
+            <figcaption>mailer.go - you write this</figcaption>
+<pre><code><span class="kw">package</span> mail
+
+<span class="dir">//fabrik:config mailer</span>
+<span class="kw">type</span> MailerConfig <span class="kw">struct</span> {
+    Kind <span class="kw">string</span> `yaml:<span class="str">"kind"</span> default:<span class="str">"log"</span>`
+    Addr <span class="kw">string</span> `yaml:<span class="str">"addr"</span> env:<span class="str">"SMTP_ADDR"</span>`
+}
+
+<span class="dir">//fabrik:provider:select mailer.kind</span>
+<span class="kw">type</span> Mailer <span class="kw">interface</span> {
+    Send(ctx context.Context, to, subject, body <span class="kw">string</span>) <span class="kw">error</span>
+}
+
+<span class="kw">type</span> SMTPMailer <span class="kw">struct</span>{ addr <span class="kw">string</span> }
+
+<span class="kw">func</span> (m *SMTPMailer) <span class="fn">Send</span>(ctx context.Context, to, subject, body <span class="kw">string</span>) <span class="kw">error</span> {
+    msg := []<span class="kw">byte</span>(<span class="str">"Subject: "</span> + subject + <span class="str">"\r\n\r\n"</span> + body)
+    <span class="kw">return</span> smtp.SendMail(m.addr, nil, <span class="str">"noreply@app.dev"</span>, []<span class="kw">string</span>{to}, msg)
+}
+
+<span class="dir">//fabrik:provider case=smtp</span>
+<span class="kw">func</span> <span class="fn">NewSMTPMailer</span>(cfg *MailerConfig) *SMTPMailer {
+    <span class="kw">return</span> &amp;SMTPMailer{addr: cfg.Addr}
+}
+
+<span class="kw">type</span> LogMailer <span class="kw">struct</span>{}
+
+<span class="kw">func</span> (*LogMailer) <span class="fn">Send</span>(ctx context.Context, to, subject, body <span class="kw">string</span>) <span class="kw">error</span> {
+    slog.InfoContext(ctx, <span class="str">"mail (dev)"</span>, <span class="str">"to"</span>, to, <span class="str">"subject"</span>, subject)
+    <span class="kw">return</span> nil
+}
+
+<span class="dir">//fabrik:provider case=log</span>
+<span class="kw">func</span> <span class="fn">NewLogMailer</span>() *LogMailer { <span class="kw">return</span> &amp;LogMailer{} }</code></pre>
+          </figure>
+
+          <figure class="code-card">
+            <figcaption>main.gen.go - Fabrik generates the selection (abbreviated)</figcaption>
+<pre><code><span class="cm">// Code generated by fabrik. DO NOT EDIT.</span>
+
+<span class="cm">// mail.Mailer, selected by mailer.kind</span>
+<span class="kw">var</span> mailer mail.Mailer
+<span class="kw">switch</span> mailerConfig.Kind {
+<span class="kw">case</span> <span class="str">"log"</span>:
+    mailer = mail.NewLogMailer()
+<span class="kw">case</span> <span class="str">"smtp"</span>:
+    mailer = mail.NewSMTPMailer(mailerConfig)
+<span class="kw">default</span>:
+    <span class="kw">return</span> fmt.Errorf(<span class="str">"no mail.Mailer implementation for %q"</span>, mailerConfig.Kind)
+}</code></pre>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="install" class="section section-alt">
+      <div class="container install-section">
+        <h2>Get started in a minute</h2>
+        <ol class="steps">
+          <li>
+            <span class="step-label">Install the CLI</span>
+            <pre class="step-code"><code>curl -fsSL https://gofabrik.dev/install.sh | sh</code></pre>
+            <p class="step-alt">
+              Prefer the Go toolchain? <a href="/docs/#install-source">Install from source with <code>go install</code> →</a>
+            </p>
+          </li>
+          <li>
+            <span class="step-label">Scaffold and run</span>
+            <pre class="step-code"><code>fabrik new hello
+cd hello
+fabrik run</code></pre>
+          </li>
+          <li>
+            <span class="step-label">Say hello</span>
+            <pre class="step-code"><code>curl 'localhost:8080/?name=fabrik'
+# Hello, fabrik!</code></pre>
+          </li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© 2026 Fabrik. All rights reserved.</span>
+      <a href="https://github.com/gofabrik/fabrik">GitHub</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('copyInstall');
+      if (!btn) return;
+      var status = document.getElementById('copyStatus');
+      btn.addEventListener('click', function () {
+        if (!navigator.clipboard) return;
+        var text = btn.querySelector('code').textContent;
+        navigator.clipboard.writeText(text).then(function () {
+          btn.classList.add('copied');
+          if (status) status.textContent = 'Copied to clipboard';
+          setTimeout(function () {
+            btn.classList.remove('copied');
+            if (status) status.textContent = '';
+          }, 1600);
+        }).catch(function () {});
+      });
+    })();
+    (function () {
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab-list [role="tab"]'));
+      function select(tab, focus) {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute('aria-selected', String(on));
+          t.tabIndex = on ? 0 : -1;
+          document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+        });
+        if (focus) tab.focus();
+      }
+      tabs.forEach(function (tab, i) {
+        tab.addEventListener('click', function () { select(tab, false); });
+        tab.addEventListener('keydown', function (e) {
+          var j = null;
+          if (e.key === 'ArrowRight') j = (i + 1) % tabs.length;
+          else if (e.key === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+          else if (e.key === 'Home') j = 0;
+          else if (e.key === 'End') j = tabs.length - 1;
+          if (j !== null) { e.preventDefault(); select(tabs[j], true); }
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

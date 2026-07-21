@@ -4,12 +4,12 @@
 #   curl -fsSL https://gofabrik.dev/install.sh | sh
 #
 # Override the target directory with FABRIK_INSTALL_DIR=/path.
-# Prefer building from source? See https://gofabrik.dev/install.html
+# Prefer building from source? See https://gofabrik.dev/docs/#install-source
 set -eu
 
 repo="gofabrik/fabrik"
 bin="fabrik"
-alt="https://gofabrik.dev/install.html"
+alt="https://gofabrik.dev/docs/#install-source"
 
 info() { printf '%s\n' "$*"; }
 die()  { printf 'fabrik install: %s\n' "$*" >&2; exit 1; }
@@ -53,14 +53,13 @@ info "Downloading ${asset} (latest release)..."
 fetch "${base}/${asset}" "${tmp}/${asset}" \
   || die "no prebuilt binary for ${os}/${arch}; install from source instead: $alt"
 
-if fetch "${base}/checksums.txt" "${tmp}/checksums.txt" 2>/dev/null; then
-  want="$(awk -v f="$asset" '$2 == f || $2 == "*"f {print $1}' "${tmp}/checksums.txt")"
-  got="$(sha256 "${tmp}/${asset}" || true)"
-  if [ -n "$want" ] && [ -n "$got" ]; then
-    [ "$want" = "$got" ] || die "checksum mismatch for ${asset}"
-    info "Checksum verified."
-  fi
-fi
+fetch "${base}/checksums.txt" "${tmp}/checksums.txt" 2>/dev/null \
+  || die "could not download checksums.txt to verify ${asset}"
+want="$(awk -v f="$asset" '$2 == f || $2 == "*"f {print $1}' "${tmp}/checksums.txt")"
+[ -n "$want" ] || die "no checksum entry for ${asset} in checksums.txt"
+got="$(sha256 "${tmp}/${asset}")" || die "need sha256sum or shasum to verify ${asset}"
+[ "$want" = "$got" ] || die "checksum mismatch for ${asset}"
+info "Checksum verified."
 
 tar -xzf "${tmp}/${asset}" -C "$tmp" || die "could not extract ${asset}"
 [ -f "${tmp}/${bin}" ] || die "archive did not contain '${bin}'"

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="go-import" content="{{.Prefix}} git {{.Repo}}">
+  <title>{{.Prefix}}{{with .Module}}/{{.}}{{end}}</title>
+</head>
+<body>
+  {{if .Module}}
+  <p><code>{{.Prefix}}/{{.Module}}</code> - source at <a href="{{.Repo}}/tree/main/{{.Module}}">{{.Repo}}/tree/main/{{.Module}}</a></p>
+  {{else}}
+  <p><code>{{.Prefix}}</code> modules:</p>
+  <ul>
+    {{range .Modules}}<li><a href="/x/{{.}}/">{{$.Prefix}}/{{.}}</a></li>
+    {{end}}
+  </ul>
+  {{end}}
+</body>
+</html>

@@ -1,0 +1,31 @@
+{{define "title"}}{{.Page.Title}} - Fabrik{{end}}
+{{define "description"}}{{.Page.Description}}{{end}}
+
+{{define "body"}}
+  <header class="docs-top">
+    <div class="container">
+      <div class="hero-top">
+        <a class="hero-brand" href="/" aria-label="Fabrik home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          fabrik
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/docs/">Docs</a>
+          <a href="/blog/" aria-current="page">Blog</a>
+          <a href="{{.Site.Config.Repo}}">GitHub</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="docs-main">
+    <div class="container">
+      <article class="docs-content post-shell">
+        <p class="post-date">{{.Page.DisplayDate}}</p>
+        <h1>{{.Page.Title}}</h1>
+        <div class="docs-body">{{.Page.Body}}</div>
+        <p class="post-back"><a href="/blog/">← All posts</a></p>
+      </article>
+    </div>
+  </main>
+{{end}}

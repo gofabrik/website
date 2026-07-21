@@ -1,0 +1,20 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Generate the site into the repo root
+    dir: internal/tools
+    cmds:
+      - go run ./cmd/site -root ../.. build
+
+  run:
+    desc: Serve the site locally, rebuilding on each request
+    dir: internal/tools
+    cmds:
+      - go run ./cmd/site -root ../.. run
+
+  test:
+    desc: Test the site generator
+    dir: internal/tools
+    cmds:
+      - go test ./...

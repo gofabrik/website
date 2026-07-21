@@ -1,0 +1,28 @@
+repo: https://github.com/gofabrik/fabrik
+vanityPrefix: gofabrik.dev/x
+modules:
+  - assetmapper
+  - assetmapper/directive
+  - cli
+  - cli/directive
+  - config
+  - config/directive
+  - diag
+  - fabrik
+  - flash
+  - forms
+  - gen
+  - httpserver
+  - jobs
+  - jobs/directive
+  - migrations
+  - migrations/directive
+  - query
+  - router
+  - router/directive
+  - session
+  - templates
+  - templates/directive
+  - validation
+  - web
+  - web/directive
